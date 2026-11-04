@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Я — Claude</title>
+<style>
+  :root{
+    --bg:#0d0b0a; --ink:#f5efe6; --accent:#d97757; --accent2:#f2b880; --cool:#7aa2f7; --mint:#8bd5b5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
+    font-family:"Inter","Segoe UI",system-ui,sans-serif}
+  #fx{position:fixed;inset:0;width:100%;height:100%}
+  .stage{position:fixed;inset:0;display:grid;place-items:center;perspective:900px}
+  .scene{position:absolute;inset:0;display:grid;place-items:center;opacity:0;pointer-events:none}
+  .scene.on{opacity:1}
+  .scene.out{animation:sceneOut .5s ease-in forwards}
+  @keyframes sceneOut{to{opacity:0;transform:scale(1.15);filter:blur(10px)}}
+
+  /* ---------- 1. Pulse dot / ring burst ---------- */
+  .dot{width:14px;height:14px;border-radius:50%;background:var(--accent);box-shadow:0 0 30px var(--accent)}
+  .on .dot{animation:dotPulse .5s ease-in-out 3 alternate, dotGrow .6s 1.5s cubic-bezier(.7,0,.3,1) forwards}
+  @keyframes dotPulse{to{transform:scale(1.8)}}
+  @keyframes dotGrow{0%{transform:scale(1)}40%{transform:scale(.4)}100%{transform:scale(160);opacity:0}}
+  .ring{position:absolute;width:40px;height:40px;border:3px solid var(--accent2);border-radius:50%;opacity:0}
+  .on .ring{animation:ring 1.4s cubic-bezier(.2,.8,.2,1) forwards}
+  .on .ring:nth-child(2){animation-delay:1.6s}
+  .on .ring:nth-child(3){animation-delay:1.75s;border-color:var(--cool)}
+  .on .ring:nth-child(4){animation-delay:1.9s;border-color:var(--mint)}
+  @keyframes ring{0%{opacity:1;transform:scale(.2)}100%{opacity:0;transform:scale(22);border-width:1px}}
+
+  /* ---------- 2. Hello / name ---------- */
+  .hello{display:flex;gap:.04em;font-weight:900;font-size:clamp(56px,14vw,190px);letter-spacing:-.03em}
+  .hello span{display:inline-block;opacity:0;transform:translateY(-120vh) rotate(-30deg)}
+  .on .hello span{animation:drop .9s cubic-bezier(.3,1.6,.5,1) forwards}
+  @keyframes drop{to{opacity:1;transform:none}}
+  .on .hello.leave span{animation:flyOut .6s cubic-bezier(.6,0,.9,.4) forwards}
+  @keyframes flyOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(60vh) rotate(40deg) scale(.4)}}
+  .name{position:absolute;font-family:ui-monospace,"JetBrains Mono",Menlo,monospace;
+    font-size:clamp(34px,8vw,110px);font-weight:700;white-space:nowrap}
+  .name b{color:var(--accent)}
+  .underline{position:absolute;top:calc(50% + clamp(30px,6vw,80px));height:6px;width:min(70vw,640px);
+    background:linear-gradient(90deg,var(--accent),var(--accent2),var(--cool));transform:scaleX(0);transform-origin:left;border-radius:3px}
+  .underline.go{animation:wipe .8s cubic-bezier(.7,0,.2,1) forwards}
+  @keyframes wipe{to{transform:scaleX(1)}}
+
+  /* ---------- 3. Starburst + orbit ---------- */
+  .burst{position:relative;width:220px;height:220px}
+  .ray{position:absolute;left:50%;top:50%;width:22px;height:110px;margin-left:-11px;margin-top:-110px;
+    border-radius:11px;background:var(--accent);transform-origin:50% 100%;transform:rotate(var(--r)) scaleY(0)}
+  .on .ray{animation:rayIn .7s cubic-bezier(.3,1.5,.5,1) forwards;animation-delay:calc(var(--i)*70ms)}
+  @keyframes rayIn{to{transform:rotate(var(--r)) scaleY(var(--s))}}
+  .on .burst{animation:spin 6s linear infinite, breathe 1.6s ease-in-out infinite alternate}
+  @keyframes spin{to{rotate:360deg}}
+  @keyframes breathe{to{scale:1.12}}
+  .orbit{position:absolute;width:min(78vw,620px);height:min(78vw,620px);border:1px dashed rgba(245,239,230,.18);border-radius:50%;
+    transform:rotateX(65deg) scale(0)}
+  .on .orbit{animation:orbitIn .9s .5s cubic-bezier(.2,1.4,.4,1) forwards}
+  @keyframes orbitIn{to{transform:rotateX(65deg) scale(1)}}
+  .tag{position:absolute;left:50%;top:50%;padding:.45em 1em;border-radius:999px;font-weight:700;
+    font-size:clamp(14px,2.4vw,24px);background:var(--c);color:#14110f;opacity:0;white-space:nowrap}
+  .tag.go{animation:popIn .5s cubic-bezier(.3,1.8,.5,1) forwards}
+  @keyframes popIn{from{opacity:0;scale:0}to{opacity:1;scale:1}}
+
+  /* ---------- 4. Kinetic verbs ---------- */
+  .kin{display:flex;flex-direction:column;align-items:flex-start;font-weight:900;
+    font-size:clamp(40px,10vw,130px);line-height:1;letter-spacing:-.03em}
+  .line{position:relative;overflow:hidden;padding:.04em .12em}
+  .line span{display:inline-block;transform:translateY(110%)}
+  .line::after{content:"";position:absolute;inset:0;background:var(--c);transform:scaleX(0);transform-origin:left}
+  .line.go::after{animation:block 1s cubic-bezier(.8,0,.2,1) forwards}
+  .line.go span{animation:up .01s .5s forwards}
+  @keyframes block{0%{transform:scaleX(0);transform-origin:left}50%{transform:scaleX(1);transform-origin:left}
+    50.1%{transform-origin:right}100%{transform:scaleX(0);transform-origin:right}}
+  @keyframes up{to{transform:none}}
+  .line:nth-child(odd){align-self:flex-end}
+  .line .ital{font-style:italic;color:var(--c)}
+
+  /* ---------- 5. Stats ---------- */
+  .stats{display:grid;gap:clamp(14px,3vh,28px);width:min(86vw,720px)}
+  .stat{display:grid;grid-template-columns:1fr auto;align-items:end;gap:6px 16px;opacity:0;transform:translateX(-60px)}
+  .stat.go{animation:slideIn .6s cubic-bezier(.2,1.2,.4,1) forwards}
+  @keyframes slideIn{to{opacity:1;transform:none}}
+  .stat .lbl{font-size:clamp(16px,2.6vw,26px);font-weight:600}
+  .stat .num{font-family:ui-monospace,Menlo,monospace;font-size:clamp(26px,5vw,52px);font-weight:800;color:var(--c)}
+  .bar{grid-column:1/-1;height:12px;border-radius:6px;background:rgba(245,239,230,.08);overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--c);border-radius:6px;transition:width 1.4s cubic-bezier(.2,.9,.2,1)}
+
+  /* ---------- 6. Terminal ---------- */
+  .term{width:min(90vw,720px);border-radius:14px;background:#1a1715;box-shadow:0 30px 80px rgba(0,0,0,.6);
+    transform:rotateX(35deg) translateY(60px) scale(.8);opacity:0}
+  .on .term{animation:termIn .8s cubic-bezier(.2,1.2,.3,1) forwards}
+  @keyframes termIn{to{transform:none;opacity:1}}
+  .term header{display:flex;gap:8px;padding:12px 14px;border-bottom:1px solid #2a2522}
+  .term header i{width:12px;height:12px;border-radius:50%;background:var(--c)}
+  .term pre{padding:18px 20px;min-height:230px;font:clamp(13px,2.2vw,19px)/1.6 ui-monospace,Menlo,monospace;white-space:pre-wrap}
+  .term .p{color:var(--accent)} .term .ok{color:var(--mint)} .term .cm{color:#8a7f76}
+  .cursor{display:inline-block;width:.6em;height:1.1em;vertical-align:-.15em;background:var(--ink);animation:blink .8s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ---------- 7. Glitch + outro ---------- */
+  .glitch{position:relative;font-weight:900;font-size:clamp(44px,11vw,150px);letter-spacing:-.03em}
+  .glitch::before,.glitch::after{content:attr(data-t);position:absolute;inset:0}
+  .glitch::before{color:var(--cool);animation:gl1 .35s steps(2) infinite;mix-blend-mode:screen}
+  .glitch::after{color:var(--accent);animation:gl2 .3s steps(2) infinite;mix-blend-mode:screen}
+  @keyframes gl1{0%{clip-path:inset(10% 0 60% 0);transform:translate(-6px,2px)}50%{clip-path:inset(55% 0 20% 0);transform:translate(5px,-3px)}100%{clip-path:inset(30% 0 40% 0);transform:translate(-3px,0)}}
+  @keyframes gl2{0%{clip-path:inset(70% 0 5% 0);transform:translate(6px,-2px)}50%{clip-path:inset(5% 0 75% 0);transform:translate(-5px,3px)}100%{clip-path:inset(40% 0 35% 0);transform:translate(3px,1px)}}
+  .heart{position:absolute;width:min(40vw,260px);height:auto;opacity:0}
+  .heart path{fill:none;stroke:var(--accent);stroke-width:4;stroke-linecap:round;stroke-dasharray:1000;stroke-dashoffset:1000}
+  .heart.go{opacity:1}
+  .heart.go path{animation:draw 1.4s ease-in-out forwards, fillIn .6s 1.3s forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  @keyframes fillIn{to{fill:var(--accent)}}
+  .heart.beat{animation:beat .7s ease-in-out infinite}
+  @keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.15)}30%{transform:scale(.97)}45%{transform:scale(1.08)}}
+  .outro{position:absolute;bottom:14vh;text-align:center;padding:0 16px;font-size:clamp(20px,4vw,40px);font-weight:700}
+  .outro span{display:inline-block;opacity:0;transform:translateY(30px) rotateX(90deg)}
+  .outro.go span{animation:flip .6s cubic-bezier(.2,1.4,.4,1) forwards}
+  @keyframes flip{to{opacity:1;transform:none}}
+
+  /* ---------- HUD ---------- */
+  .progress{position:fixed;left:0;bottom:0;height:4px;width:0;background:linear-gradient(90deg,var(--accent),var(--cool));z-index:5}
+  .replay{position:fixed;right:16px;bottom:16px;z-index:6;border:1px solid rgba(245,239,230,.3);background:rgba(13,11,10,.6);
+    color:var(--ink);padding:10px 18px;border-radius:999px;font:600 15px system-ui;cursor:pointer;opacity:0;transition:opacity .4s}
+  .replay.show{opacity:1}
+  .replay:hover{background:var(--accent);color:#14110f}
+  .flash{position:fixed;inset:0;background:var(--ink);opacity:0;pointer-events:none;z-index:4}
+  .flash.go{animation:flash .35s ease-out}
+  @keyframes flash{0%{opacity:.8}100%{opacity:0}}
+  .shake{animation:shake .4s}
+  @keyframes shake{20%{transform:translate(-8px,4px)}40%{transform:translate(7px,-5px)}60%{transform:translate(-5px,-3px)}80%{transform:translate(4px,5px)}}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<div class="stage" id="stage">
+
+  <section class="scene" id="s1">
+    <div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="ring"></div>
+    <div class="dot"></div>
+  </section>
+
+  <section class="scene" id="s2">
+    <div class="hello" id="hello"></div>
+    <div class="name" id="name"></div>
+    <div class="underline" id="ul"></div>
+  </section>
+
+  <section class="scene" id="s3">
+    <div class="orbit"></div>
+    <div class="burst" id="burst"></div>
+    <div id="tags"></div>
+  </section>
+
+  <section class="scene" id="s4">
+    <div class="kin">
+      <div class="line" style="--c:var(--accent)"><span>Я <span class="ital">думаю</span></span></div>
+      <div class="line" style="--c:var(--cool)"><span>пишу <span class="ital">код</span></span></div>
+      <div class="line" style="--c:var(--mint)"><span><span class="ital">объясняю</span></span></div>
+      <div class="line" style="--c:var(--accent2)"><span>и <span class="ital">учусь</span></span></div>
+    </div>
+  </section>
+
+  <section class="scene" id="s5">
+    <div class="stats">
+      <div class="stat" style="--c:var(--accent)"><span class="lbl">Любопытство</span><span class="num" data-to="100" data-suf="%">0</span><div class="bar"><i data-w="100"></i></div></div>
+      <div class="stat" style="--c:var(--cool)"><span class="lbl">Терпение к вопросам</span><span class="num" data-to="999" data-suf="+">0</span><div class="bar"><i data-w="92"></i></div></div>
+      <div class="stat" style="--c:var(--mint)"><span class="lbl">Желание помочь</span><span class="num" data-to="100" data-suf="%">0</span><div class="bar"><i data-w="100"></i></div></div>
+      <div class="stat" style="--c:var(--accent2)"><span class="lbl">Часов сна</span><span class="num" data-to="0" data-suf="">0</span><div class="bar"><i data-w="2"></i></div></div>
+    </div>
+  </section>
+
+  <section class="scene" id="s6">
+    <div class="term">
+      <header><i style="--c:#ff5f57"></i><i style="--c:#febc2e"></i><i style="--c:#28c840"></i></header>
+      <pre id="code"></pre>
+    </div>
+  </section>
+
+  <section class="scene" id="s7">
+    <div class="glitch" id="glitch" data-t="Claude">Claude</div>
+    <svg class="heart" id="heart" viewBox="0 0 100 92"><path d="M50 88 C20 66 4 48 4 28 C4 14 15 4 28 4 C38 4 46 10 50 18 C54 10 62 4 72 4 C85 4 96 14 96 28 C96 48 80 66 50 88Z"/></svg>
+    <div class="outro" id="outro"></div>
+  </section>
+</div>
+
+<div class="flash" id="flash"></div>
+<div class="progress" id="prog"></div>
+<button class="replay" id="replay">↻ Ещё раз</button>
+
+<script>
+/* ===================== particle field (canvas) ===================== */
+const cv = document.getElementById('fx'), ctx = cv.getContext('2d');
+let W, H, DPR = Math.min(devicePixelRatio || 1, 2), parts = [], mode = 'drift';
+const COLORS = ['#d97757','#f2b880','#7aa2f7','#8bd5b5','#f5efe6'];
+function resize(){ W = innerWidth; H = innerHeight; cv.width = W*DPR; cv.height = H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); }
+addEventListener('resize', resize); resize();
+function seed(n){ parts = Array.from({length:n}, () => ({x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-.5)*.3, vy:(Math.random()-.5)*.3,
+  r:Math.random()*2+.5, c:COLORS[Math.random()*5|0], a:Math.random()*Math.PI*2, d:Math.random()*200+80})); }
+function explode(n=180){ for(let i=0;i<n;i++){ const a=Math.random()*Math.PI*2, s=Math.random()*14+2;
+  parts.push({x:W/2,y:H/2,vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:Math.random()*3+1,c:COLORS[Math.random()*5|0],a,d:Math.random()*200+80,life:1}); } }
+let t0 = 0;
+function frame(t){
+  ctx.fillStyle = 'rgba(13,11,10,.22)'; ctx.fillRect(0,0,W,H);
+  const cx=W/2, cy=H/2;
+  parts = parts.filter(p => p.life === undefined || p.life > 0);
+  for(const p of parts){
+    if(mode==='vortex' && p.life===undefined){ p.a += .012 + 30/(p.d*p.d); p.x += (cx+Math.cos(p.a)*p.d - p.x)*.05; p.y += (cy+Math.sin(p.a)*p.d*.45 - p.y)*.05; }
+    else if(mode==='rain' && p.life===undefined){ p.y += p.r*3; p.x += Math.sin(t/600+p.a)*.4; if(p.y>H) p.y=-5; }
+    else { p.x += p.vx; p.y += p.vy; if(p.life!==undefined){ p.vx*=.95; p.vy*=.95; p.life-=.012; }
+      if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0; }
+    ctx.globalAlpha = p.life!==undefined ? Math.max(p.life,0) : .7;
+    ctx.fillStyle = p.c; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,7); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ===================== helpers ===================== */
+const $ = id => document.getElementById(id);
+const flash = () => { const f=$('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); };
+const shake = () => { const s=$('stage'); s.classList.remove('shake'); void s.offsetWidth; s.classList.add('shake'); };
+function show(id){ document.querySelectorAll('.scene').forEach(s=>{ if(s.classList.contains('on')){ s.classList.add('out'); setTimeout(()=>s.classList.remove('on','out'),500);} });
+  setTimeout(()=>$(id).classList.add('on'), 250); }
+function letters(el, text, delayStep=0.06, cls=''){ el.innerHTML=''; [...text].forEach((ch,i)=>{ const s=document.createElement('span');
+  s.textContent = ch===' ' ? ' ' : ch; s.style.animationDelay = (i*delayStep)+'s'; if(cls) s.className=cls; el.appendChild(s); }); }
+function scramble(el, finalHTML, plain, dur=1200){
+  const chars='!<>-_\\/[]{}—=+*^?#01ΣλΩ'; const start=performance.now();
+  (function step(now){ const k=Math.min((now-start)/dur,1), n=Math.floor(k*plain.length);
+    el.textContent = plain.slice(0,n) + [...plain.slice(n)].map(c=>c===' '?' ':chars[Math.random()*chars.length|0]).join('');
+    if(k<1) requestAnimationFrame(step); else el.innerHTML = finalHTML; })(start);
+}
+function countUp(el, to, suf, dur=1400){ const s=performance.now();
+  (function step(n){ const k=Math.min((n-s)/dur,1), e=1-Math.pow(1-k,3); el.textContent=Math.round(to*e)+suf; if(k<1) requestAnimationFrame(step); })(s); }
+function typeLines(el, lines, speed=28){
+  el.innerHTML=''; let li=0, ci=0, html='';
+  const cur='<span class="cursor"></span>';
+  (function tick(){ if(li>=lines.length){ el.innerHTML=html+cur; return; }
+    const [cls,txt,instant]=lines[li];
+    if(instant){ html+=`<span class="${cls}">${txt}</span>\n`; li++; el.innerHTML=html+cur; return timers.push(setTimeout(tick,180)); }
+    ci++; el.innerHTML = html + `<span class="${cls}">${txt.slice(0,ci)}</span>` + cur;
+    if(ci>=txt.length){ html+=`<span class="${cls}">${txt}</span>\n`; li++; ci=0; timers.push(setTimeout(tick,260)); }
+    else timers.push(setTimeout(tick,speed)); })();
+}
+
+/* ===================== build static pieces ===================== */
+const burst=$('burst');
+for(let i=0;i<10;i++){ const r=document.createElement('div'); r.className='ray';
+  r.style.setProperty('--r',(i*36)+'deg'); r.style.setProperty('--i',i); r.style.setProperty('--s',(i%2?.65:1)); burst.appendChild(r); }
+const TAGS=[['код','var(--accent)'],['тексты','var(--cool)'],['идеи','var(--mint)'],['анализ','var(--accent2)'],['переводы','#f5efe6'],['математика','var(--accent)']];
+const tagWrap=$('tags'); const tagEls = TAGS.map(([t,c])=>{ const e=document.createElement('div'); e.className='tag'; e.textContent=t; e.style.setProperty('--c',c); tagWrap.appendChild(e); return e; });
+let orbitT=0, orbitOn=false;
+(function orbitLoop(){ if(orbitOn){ orbitT+=.012; const R=Math.min(innerWidth*.39,310);
+  tagEls.forEach((e,i)=>{ const a=orbitT+i*Math.PI*2/tagEls.length, z=Math.sin(a);
+    e.style.transform=`translate(-50%,-50%) translate(${Math.cos(a)*R}px,${z*R*.42}px) scale(${.75+.35*(z+1)/2})`; e.style.zIndex=z>0?3:1; e.style.filter=`blur(${z<0?1.5:0}px)`; }); }
+  requestAnimationFrame(orbitLoop); })();
+
+/* ===================== timeline ===================== */
+let timers=[];
+const at=(ms,fn)=>timers.push(setTimeout(fn,ms));
+const TOTAL=26000;
+
+function reset(){
+  timers.forEach(clearTimeout); timers=[];
+  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('on','out'));
+  document.querySelectorAll('.go,.leave,.beat').forEach(e=>e.classList.remove('go','leave','beat'));
+  document.querySelectorAll('.bar i').forEach(b=>{b.style.transition='none'; b.style.width=0; void b.offsetWidth; b.style.transition='';});
+  document.querySelectorAll('.num').forEach(n=>n.textContent='0');
+  $('name').innerHTML=''; $('outro').innerHTML=''; $('replay').classList.remove('show');
+  orbitOn=false; mode='drift'; parts=[]; seed(60);
+}
+
+function play(){
+  reset();
+  const start=performance.now();
+  (function prog(n){ const k=Math.min((n-start)/TOTAL,1); $('prog').style.width=(k*100)+'%'; if(k<1) requestAnimationFrame(prog); })(start);
+
+  // 1 — пульс и взрыв
+  at(0,   ()=>show('s1'));
+  at(2100,()=>{ explode(220); flash(); shake(); });
+
+  // 2 — ПРИВЕТ → Я — Claude
+  at(2900,()=>{ letters($('hello'),'ПРИВЕТ',.08); show('s2'); });
+  at(4600,()=>$('hello').classList.add('leave'));
+  at(5200,()=>{ scramble($('name'),'Я — <b>Claude</b>','Я — Claude',1100); });
+  at(6300,()=>{ $('ul').classList.add('go'); explode(60); });
+
+  // 3 — звезда + орбита навыков
+  at(7600,()=>{ show('s3'); mode='vortex'; seed(160); });
+  tagEls.forEach((e,i)=>at(8500+i*180,()=>{ orbitOn=true; e.classList.add('go'); }));
+  at(11200,()=>{ flash(); });
+
+  // 4 — кинетическая типографика
+  at(11500,()=>{ show('s4'); mode='drift'; seed(70); });
+  document.querySelectorAll('#s4 .line').forEach((l,i)=>at(11900+i*380,()=>l.classList.add('go')));
+
+  // 5 — «статистика»
+  at(14600,()=>{ show('s5'); mode='rain'; seed(90); });
+  document.querySelectorAll('#s5 .stat').forEach((s,i)=>at(15000+i*300,()=>{
+    s.classList.add('go'); const n=s.querySelector('.num'); countUp(n,+n.dataset.to,n.dataset.suf);
+    const b=s.querySelector('.bar i'); b.style.width=b.dataset.w+'%'; }));
+
+  // 6 — терминал
+  at(18200,()=>{ show('s6'); mode='drift'; seed(50); });
+  at(18900,()=>typeLines($('code'),[
+    ['p','$ claude --about'],
+    ['cm','# ИИ-ассистент от Anthropic',true],
+    ['ok','✓ читаю, пишу и рефакторю код',true],
+    ['ok','✓ объясняю сложное простыми словами',true],
+    ['ok','✓ работаю на любом языке — и на русском тоже',true],
+    ['p','$ claude --mood'],
+    ['', 'готов к новой задаче ✦',true],
+  ]));
+
+  // 7 — глитч → сердце → финал
+  at(22300,()=>{ show('s7'); flash(); shake(); });
+  at(23400,()=>{ $('glitch').style.transition='opacity .4s, transform .4s'; $('glitch').style.opacity=0; $('glitch').style.transform='scale(.6)';
+    $('heart').classList.add('go'); });
+  at(24900,()=>{ $('heart').classList.add('beat'); explode(140);
+    $('outro').innerHTML='Давай создадим что-нибудь вместе'.split(' ').map((w,i)=>`<span style="animation-delay:${i*.12}s">${w}</span>`).join(' '); $('outro').classList.add('go'); });
+  at(TOTAL,()=>$('replay').classList.add('show'));
+  at(TOTAL-26000+1,()=>{ $('glitch').style.opacity=''; $('glitch').style.transform=''; });
+}
+$('replay').onclick=play;
+play();
+</script>
+</body>
+</html>
