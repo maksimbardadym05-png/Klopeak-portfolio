@@ -7,7 +7,7 @@ const path = require('path');
 const fs = require('fs');
 
 const PAGE = 'file://' + path.resolve(__dirname, '..', 'index.html') + '?render';
-const DUR = 35;
+const DUR = 105;
 
 async function openPage(browser) {
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
