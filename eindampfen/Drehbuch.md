@@ -4,18 +4,18 @@ Video: `eindampfen.mp4` · 1:45 Minuten · ohne Ton · 1920×1080
 Sprechtext auf Deutsch, darunter *Übersetzung ins Russische*.
 Nach jedem Schritt gibt es eine ruhige Pause im Video zum Erklären.
 
-## Kurzfassung (zum Vorlesen)
+## Sprechtext (zum Vorlesen)
 
 | Zeit | Abschnitt | Sprechtext | Перевод |
 |---|---|---|---|
-| 0:00 | Titel | Heute geht es um das Eindampfen: Wie holen wir das Salz aus dem Salzwasser? | Сегодня тема — выпаривание: как достать соль из солёной воды? |
-| 0:06 | Vorbereitung | Im Reagenzglas ist Salzwasser. Wir tragen eine Schutzbrille und halten das Glas mit der Reagenzglasklammer. | В пробирке солёная вода. Надеваем защитные очки и держим пробирку держателем. |
-| 0:20 | Brenner anzünden | Erst die Flamme vom Feuerzeug, dann das Gas aufdrehen. Mit offenem Luftloch wird die Flamme blau und heißer. | Сначала пламя зажигалки, потом открываем газ. С открытым отверстием для воздуха пламя синее и горячее. |
-| 0:39 | Erhitzen | Wir erhitzen die Lösung. Bei etwa 100 °C siedet sie. Das Wasser verdampft und steigt als Dampf nach oben. | Нагреваем раствор. Примерно при 100 °C он кипит. Вода испаряется и поднимается паром вверх. |
-| 1:04 | Ergebnis | Das Wasser ist weg, das Salz bleibt als weiße Kristalle zurück. | Вода ушла, соль осталась в виде белых кристаллов. |
-| 1:13 | Warum? | Wasser siedet bei 100 °C, Salz erst bei über 1400 °C. Darum verdampft nur das Wasser. | Вода кипит при 100 °C, соль — только выше 1400 °C. Поэтому испаряется только вода. |
-| 1:24 | Anwendung | So gewinnt man Meersalz, stellt Zucker her und kocht Soßen ein. | Так добывают морскую соль, делают сахар и уваривают соусы. |
-| 1:33 | Vor- und Nachteile | Vorteil: einfach, der gelöste Stoff bleibt zurück. Nachteil: Das Wasser geht verloren, und es braucht viel Energie. | Плюс: просто, растворённое вещество остаётся. Минус: вода теряется, и нужно много энергии. |
+| 0:00 | Titel | Heute lernt ihr das Eindampfen kennen. Damit trennt man einen gelösten Stoff vom Wasser. Wie holen wir das Salz aus dem Salzwasser? | Сегодня вы познакомитесь с выпариванием. Так отделяют растворённое вещество от воды. Как достать соль из солёной воды? |
+| 0:06 | Vorbereitung | Im Reagenzglas ist Salzwasser. Das Salz ist gelöst, deshalb sieht man es nicht. Das Glas ist nur zu einem Drittel gefüllt. Wir tragen eine Schutzbrille und halten das Glas mit der Reagenzglasklammer aus Holz. | В пробирке солёная вода. Соль растворена, поэтому её не видно. Пробирка заполнена только на треть. Надеваем защитные очки и держим пробирку деревянным держателем. |
+| 0:20 | Brenner anzünden | Zuerst halten wir die Flamme vom Feuerzeug an den Brenner, dann drehen wir das Gas auf. Die Flamme ist gelb, das ist die leuchtende Flamme. Öffnen wir das Luftloch, wird sie blau und heißer: die rauschende Flamme. | Сначала подносим пламя зажигалки к горелке, потом открываем газ. Пламя жёлтое — это светящееся пламя. Если открыть отверстие для воздуха, оно становится синим и горячее — это шумящее пламя. |
+| 0:39 | Erhitzen | Wir halten das Glas schräg in die Flamme und schwenken es leicht. Bei etwa 100 °C siedet die Lösung, es bilden sich Blasen. Das Wasser verdampft und steigt als Dampf nach oben. Oben im Glas kühlt der Dampf ab, es bilden sich Tropfen. Die Flüssigkeit wird immer weniger. | Держим пробирку наклонно в пламени и слегка покачиваем. Примерно при 100 °C раствор кипит, появляются пузырьки. Вода испаряется и поднимается паром вверх. Вверху пробирки пар остывает, появляются капли. Жидкости становится всё меньше. |
+| 1:04 | Ergebnis | Jetzt ist das ganze Wasser verdampft. Zurück bleibt ein weißer Belag: das Salz. Unter der Lupe sieht man kleine Salzkristalle. | Теперь вся вода испарилась. Остаётся белый налёт — соль. Под лупой видны маленькие кристаллы соли. |
+| 1:13 | Warum? | Warum klappt das? Wasser siedet bei 100 °C, Salz erst bei über 1400 °C. Die Wasserteilchen verlassen die Lösung, die Salzteilchen bleiben zurück und bilden Kristalle. | Почему это работает? Вода кипит при 100 °C, соль — только выше 1400 °C. Частицы воды покидают раствор, частицы соли остаются и образуют кристаллы. |
+| 1:24 | Anwendung | Eindampfen nutzt man auch im Alltag. Am Meer verdampfen Sonne und Wind das Meerwasser, so entsteht Meersalz. Auch Zucker wird so gewonnen, und in der Küche kocht man Soßen ein. | Выпаривание используют и в жизни. У моря солнце и ветер испаряют морскую воду, так получают морскую соль. Так же получают сахар, а на кухне уваривают соусы. |
+| 1:33 | Vor- und Nachteile | Vorteile: Es ist einfach, und der gelöste Stoff bleibt zurück. Nachteile: Das Wasser geht verloren, und man braucht viel Energie oder Zeit. Will man das Wasser auch auffangen, nutzt man die Destillation. | Плюсы: это просто, и растворённое вещество остаётся. Минусы: вода теряется, и нужно много энергии или времени. Если воду тоже нужно собрать, используют дистилляцию. |
 
 ---
 
